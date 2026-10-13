@@ -4,10 +4,6 @@ on:
   push:
     branches: [ "main" ]
 
-permissions:
-  contents: read
-  security-events: write
-
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
@@ -20,9 +16,9 @@ jobs:
       run: |
         docker build -t demo-web-app:latest .
 
-    - name: Scan Container Image with TMAS
-      uses: trendmicro/tmas-scan-action@v3.3.1
-      with:
-        tmasApiKey: ${{ secrets.TMAS_API_KEY }}
-        path: 'demo-web-app:latest'
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install and Run TMAS Scan
+      env:
+        TMAS_API_KEY: ${{ secrets.TMAS_API_KEY }}
+      run: |
+        curl -sL https://raw.githubusercontent.com/trendmicro/tm-v1-container-security-cli/main/install.sh | sh
+        ./tmas scan image demo-web-app:latest --apiKey $TMAS_API_KEY
