@@ -1,0 +1,27 @@
+name: Build and Scan Container Image
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Build Container Image
+      run: |
+        docker build -t demo-web-app:latest .
+
+    - name: Install Trend Micro TMAS CLI
+      run: |
+        curl -sL https://raw.githubusercontent.com/trendmicro/tm-v1-container-security-cli/main/install.sh | sh
+
+    - name: Scan Image with Trend Micro TMAS
+      env:
+        TMAS_API_KEY: ${{ secrets.TMAS_API_KEY }}
+      run: |
+        ./tmas scan image demo-web-app:latest --apiKey $TMAS_API_KEY
