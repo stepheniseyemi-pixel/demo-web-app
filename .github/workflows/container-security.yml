@@ -17,7 +17,7 @@ jobs:
         docker build -t demo-web-app:latest .
 
     - name: Scan Container Image with TMAS
-      uses: trendmicro/tmas-scan-action@v3
+      uses: trendmicro/tmas-scan-action@v3.3.1
       with:
         TMAS_API_KEY: ${{ secrets.TMAS_API_KEY }}
         imageToScan: 'demo-web-app:latest'
