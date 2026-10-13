@@ -10,14 +10,14 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build Container Image
       run: |
         docker build -t demo-web-app:latest .
 
-    - name: Scan Image with Trend Micro TMAS
-      uses: trendmicro/tm-v1-container-security-cli-action@v1
+    - name: Scan Container Image with TMAS
+      uses: trendmicro/tmas-scan-action@v3
       with:
-        image: 'demo-web-app:latest'
-        api-key: ${{ secrets.TMAS_API_KEY }}
+        TMAS_API_KEY: ${{ secrets.TMAS_API_KEY }}
+        imageToScan: 'demo-web-app:latest'
